@@ -9,24 +9,27 @@ import pygetwindow as gw
 pyautogui.FAILSAFE = False
 
 
-def find_telegram_in_search():
-    """Helper function to find and click Telegram in search results"""
-    try:
-        # Get screen dimensions for better positioning
-        screen_width, screen_height = pyautogui.size()
-
-        # Calculate position for first search result
-        # Typically appears in the left panel of Start menu
-        search_result_x = int(screen_width * 0.15)  # 15% from left
-        search_result_y = int(screen_height * 0.25)  # 25% from top
-
-        print(f"[DEBUG] Clicking on search result at ({search_result_x}, {search_result_y})...")
-        pyautogui.click(x=search_result_x, y=search_result_y)
-        return True
-
-    except Exception as e:
-        print(f"[ERROR] Could not click search result: {e}")
-        return False
+def find_telegram_click_position():
+    """Run this to find where to click for Telegram"""
+    print("Opening Start menu...")
+    pyautogui.press('win')
+    time.sleep(3)
+    
+    print("Typing telegram...")
+    pyautogui.typewrite('telegram')
+    time.sleep(3)
+    
+    print("\nNOW LOOK AT YOUR SCREEN!")
+    print("Move your mouse to where Telegram appears in the search results")
+    print("You have 5 seconds...")
+    time.sleep(5)
+    
+    x, y = pyautogui.position()
+    print(f"\nTelegram appears at position: x={x}, y={y}")
+    print(f"Update the code to use: click_x = {x}, click_y = {y}")
+    
+    # Click it to test
+    pyautogui.click(x, y)
 
 
 def open_app(app_name):
@@ -53,13 +56,13 @@ def open_app(app_name):
             return False
         elif app_name == "telegram":
             print("\n[DEBUG] Starting Telegram open process...")
-
+            
             # Check if already running
             telegram_windows = []
             for window in gw.getAllWindows():
                 if "telegram" in window.title.lower():
                     telegram_windows.append(window)
-
+                    
             if telegram_windows:
                 print(f"[INFO] Telegram already running. Found {len(telegram_windows)} window(s)")
                 try:
@@ -67,64 +70,41 @@ def open_app(app_name):
                 except:
                     pass
                 return True
-
-            # WINDOWS 11 SPECIFIC APPROACH
+            
+            # SIMPLE WINDOWS 11 APPROACH - JUST CLICK!
             print("[INFO] Opening Telegram via Windows 11 Start Menu...")
             try:
                 # Press Windows key
                 print("[DEBUG] Pressing Windows key...")
                 pyautogui.press('win')
-                time.sleep(5)  # Windows 11 needs more time for Start menu
-
+                time.sleep(3)
+                
                 # Type telegram
                 print("[DEBUG] Typing 'telegram'...")
                 pyautogui.typewrite('telegram', interval=0.1)
-                time.sleep(5)  # Wait for Windows 11 search to complete
-
-                # In Windows 11, we need to ensure the result is selected
-                print("[DEBUG] Selecting first result with Tab...")
-                # This selects the first result in Windows 11
-                pyautogui.press('tab')
-                time.sleep(1)
-
-                # Now press Enter
-                print("[DEBUG] Pressing Enter to launch...")
-                pyautogui.press('enter')
-
-                # Wait for Telegram to open
-                print("[INFO] Waiting 20 seconds for Telegram to open...")
-                time.sleep(20)
-
-                print("[SUCCESS] Telegram should be open now")
+                time.sleep(8)  # Wait for search results
+                
+                # JUST CLICK ON THE FIRST APP RESULT
+                # In Windows 11, app results appear on the left side
+                screen_width, screen_height = pyautogui.size()
+                
+                # Click where the first app result appears in Windows 11
+                click_x = 546  # Fixed position - left side where apps show
+                click_y = 348  # First result position
+                
+                print(f"[DEBUG] Clicking at ({click_x}, {click_y})...")
+                pyautogui.click(x=click_x, y=click_y)
+                
+                # Give it time to open
+                print("[INFO] Waiting 15 seconds for Telegram to open...")
+                time.sleep(15)
+                
                 return True
-
+                        
             except Exception as e:
-                print(f"[ERROR] Failed to open Telegram: {e}")
-
-                # Windows 11 Alternative: Try clicking in the search results area
-                try:
-                    print("\n[FALLBACK] Trying click method for Windows 11...")
-                    pyautogui.press('win')
-                    time.sleep(5)
-                    pyautogui.typewrite('telegram', interval=0.1)
-                    time.sleep(5)
-
-                    # In Windows 11, results appear in center of screen
-                    screen_width, screen_height = pyautogui.size()
-                    # Click on the first result (usually in the center-left area)
-                    click_x = int(screen_width * 0.3)  # 30% from left
-                    click_y = int(screen_height * 0.4)  # 40% from top
-
-                    print(f"[DEBUG] Clicking at ({click_x}, {click_y})...")
-                    pyautogui.click(x=click_x, y=click_y)
-
-                    time.sleep(20)
-                    return True
-
-                except Exception as e2:
-                    print(f"[ERROR] Click method also failed: {e2}")
-                    return False
-
+                print(f"[ERROR] Failed: {e}")
+                return False
+                    
         else:
             print("Unsupported app:", app_name)
             return False
@@ -337,3 +317,25 @@ def debug_telegram_search():
     search_result_y = int(screen_height * 0.25)
     print(f"Clicking at ({search_result_x}, {search_result_y})...")
     pyautogui.click(x=search_result_x, y=search_result_y)
+
+def find_telegram_click_position():
+    """Run this to find where to click for Telegram"""
+    print("Opening Start menu...")
+    pyautogui.press('win')
+    time.sleep(3)
+    
+    print("Typing telegram...")
+    pyautogui.typewrite('telegram')
+    time.sleep(3)
+    
+    print("\nNOW LOOK AT YOUR SCREEN!")
+    print("Move your mouse to where Telegram appears in the search results")
+    print("You have 5 seconds...")
+    time.sleep(5)
+    
+    x, y = pyautogui.position()
+    print(f"\nTelegram appears at position: x={x}, y={y}")
+    print(f"Update the code to use: click_x = {x}, click_y = {y}")
+    
+    # Click it to test
+    pyautogui.click(x, y)

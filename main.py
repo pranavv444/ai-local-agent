@@ -16,11 +16,11 @@ CAPABILITIES:
 3. Send messages via Telegram (opens via Windows 11 Start menu)
 
 IMPORTANT TECHNICAL NOTE - WINDOWS 11 SPECIFIC:
-- Telegram is opened using Windows 11 Start menu (Win key → type "telegram" → Tab → Enter)
-- The Tab key is CRUCIAL for Windows 11 to select the search result
-- The system uses Start menu search with Tab selection, NOT Run dialog or exe paths
-- Fallback uses mouse click at 30% from left, 40% from top
-- Designed for slow PCs with very long delays
+- Telegram is opened using Windows 11 Start menu (Win key → type "telegram" → Click)
+- The system uses Start menu search with mouse click at fixed position (546, 348)
+- NO Tab key (it goes to web section), NO Run dialog, NO exe paths
+- Simple click-based approach for reliability
+- Designed for slow PCs with appropriate delays
 
 FORMATTING RULES FOR TELEGRAM:
 
@@ -48,14 +48,13 @@ ACTION: notepad open (uses exe path)
 ACTION: paint open (uses exe path)
 
 TELEGRAM WINDOWS 11 SPECIFIC INFO:
-- Opens via Windows 11 Start menu: Win key → wait 5s → type "telegram" → wait 5s → Tab → Enter
-- Tab key selects the first search result in Windows 11 (CRITICAL STEP)
-- Fallback click method: clicks at 30% width, 40% height if Tab+Enter fails
-- NOT using Run dialog (Win+R) or direct exe paths
+- Opens via Windows 11 Start menu: Win key → wait 3s → type "telegram" → wait 3s → Click at (200, 150)
+- Fixed click position where first app result appears in Windows 11
+- NO Tab key usage (causes issues with web search)
 - Contact search uses Ctrl+F in Telegram after 10 attempts to find window
 - Messages typed using keyboard automation (clipboard for long messages >30 chars)
 - Window focusing includes multiple mouse clicks for reliability
-- Extended delays: 5s after Win key, 5s after typing, 20s for app to open, 5s between window checks
+- Delays: 3s after Win key, 3s after typing, 15s for app to open, 5s between window checks
 
 RULES:
 - ONLY output ACTION: lines for commands
