@@ -15,8 +15,8 @@ def find_telegram_click_position():
     pyautogui.press('win')
     time.sleep(3)
     
-    print("Typing telegram...")
-    pyautogui.typewrite('telegram')
+    print("Typing Apps:telegram...")
+    pyautogui.typewrite('Apps:telegram')
     time.sleep(3)
     
     print("\nNOW LOOK AT YOUR SCREEN!")
@@ -57,7 +57,7 @@ def open_app(app_name):
         elif app_name == "telegram":
             print("\n[DEBUG] Starting Telegram open process...")
             
-            # Check if already running
+            # Check if already running in a window
             telegram_windows = []
             for window in gw.getAllWindows():
                 if "telegram" in window.title.lower():
@@ -71,6 +71,34 @@ def open_app(app_name):
                     pass
                 return True
             
+            # NEW: Check taskbar for Telegram
+            print("[INFO] Checking taskbar for Telegram...")
+            screen_width, screen_height = pyautogui.size()
+            taskbar_y = screen_height - 40  # Middle of taskbar
+            
+            # Try clicking common icon positions in taskbar
+            for x_percent in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]:
+                x_pos = int(screen_width * x_percent)
+                print(f"[DEBUG] Checking taskbar position ({x_pos}, {taskbar_y})...")
+                
+                # Click the position
+                pyautogui.click(x_pos, taskbar_y)
+                time.sleep(2)  # Wait for window to appear
+                
+                # Check if Telegram window appeared
+                for window in gw.getAllWindows():
+                    if "telegram" in window.title.lower():
+                        print(f"[SUCCESS] Found Telegram at taskbar position {x_pos}")
+                        # Give it a moment to fully open
+                        time.sleep(1)
+                        try:
+                            window.activate()
+                        except:
+                            pass
+                        return True
+            
+            print("[INFO] Telegram not found in taskbar, opening fresh...")
+            
             # SIMPLE WINDOWS 11 APPROACH - JUST CLICK!
             print("[INFO] Opening Telegram via Windows 11 Start Menu...")
             try:
@@ -80,8 +108,8 @@ def open_app(app_name):
                 time.sleep(3)
                 
                 # Type telegram
-                print("[DEBUG] Typing 'telegram'...")
-                pyautogui.typewrite('telegram', interval=0.1)
+                print("[DEBUG] Typing 'Apps:telegram'...")
+                pyautogui.typewrite('Apps:telegram', interval=0.1)
                 time.sleep(8)  # Wait for search results
                 
                 # JUST CLICK ON THE FIRST APP RESULT
@@ -317,25 +345,3 @@ def debug_telegram_search():
     search_result_y = int(screen_height * 0.25)
     print(f"Clicking at ({search_result_x}, {search_result_y})...")
     pyautogui.click(x=search_result_x, y=search_result_y)
-
-def find_telegram_click_position():
-    """Run this to find where to click for Telegram"""
-    print("Opening Start menu...")
-    pyautogui.press('win')
-    time.sleep(3)
-    
-    print("Typing telegram...")
-    pyautogui.typewrite('telegram')
-    time.sleep(3)
-    
-    print("\nNOW LOOK AT YOUR SCREEN!")
-    print("Move your mouse to where Telegram appears in the search results")
-    print("You have 5 seconds...")
-    time.sleep(5)
-    
-    x, y = pyautogui.position()
-    print(f"\nTelegram appears at position: x={x}, y={y}")
-    print(f"Update the code to use: click_x = {x}, click_y = {y}")
-    
-    # Click it to test
-    pyautogui.click(x, y)
