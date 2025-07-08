@@ -1,2 +1,0 @@
-from app_control import find_telegram_click_position
-find_telegram_click_position()
