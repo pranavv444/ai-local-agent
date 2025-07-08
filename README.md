@@ -135,26 +135,3 @@ ARIA is a desktop‐based AI assistant powered by LangChain and Ollama. It can a
 ├── chrome_langchain_db # Persisted ChromaDB folder
 └── .gitignore
 ```
-
-
-
-## 🤝 Contributing
-
-Found a bug or have an idea?
-
-1. Fork the repo
-2. Create a branch (`git checkout -b feature/XYZ`)
-3. Commit your changes (`git commit -m "Add XYZ"`)
-4. Push (`git push origin feature/XYZ`)
-5. Open a Pull Request
-
----
-
-
-
----
-
-*Built with ❤️ using Python, LangChain & Ollama.*
-
-```
-```
