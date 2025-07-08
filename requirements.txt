@@ -48,9 +48,6 @@ urllib3==2.5.0
 idna==3.10
 charset-normalizer==3.4.2
 
-# Kubernetes SDK (may be optional depending on future usage)
-kubernetes==33.1.0
-
 # Logging and development
 rich==14.0.0
 coloredlogs==15.0.1
