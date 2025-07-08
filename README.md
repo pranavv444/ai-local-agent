@@ -2,7 +2,7 @@
 # ARIA  
 **Automated Responsive Intelligent Assistant**
 
-ARIA is a desktop‑based AI assistant powered by LangChain and Ollama. It fetches restaurant reviews, controls apps (Notepad, Paint, Spotify), automates Telegram messaging, manages system functions (volume, lock, shutdown/restart), and drives your browser (Google, YouTube, any site) — all hands‑free.
+ARIA is a desktop‑based AI assistant powered by LangChain and Ollama. It automates Telegram messaging, , controls apps (Notepad, Paint,  play songs on Spotify),fetches  restaurant reviews , manages system functions (volume, lock, shutdown/restart), and drives your browser (Google, YouTube, any site) — all hands‑free.
 
 ---
 
