@@ -12,7 +12,7 @@ import subprocess
 
 # Updated Template
 template = """
-You are an AI assistant that can answer questions and control desktop applications.
+You are ARIA, an AI assistant that can answer questions and control desktop applications.
 
 CAPABILITIES:
 1. Answer pizza restaurant questions using provided reviews
@@ -309,7 +309,7 @@ def process_llm_response(llm_output: str):
 
 if __name__ == "__main__":
     print("="*50)
-    print("AI DESKTOP ASSISTANT")
+    print("ARIA-AI DESKTOP ASSISTANT")
     print("="*50)
     
     while True:
