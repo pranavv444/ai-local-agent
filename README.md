@@ -1,3 +1,4 @@
+````markdown
 # ARIA  
 **Automated Responsive Intelligent Assistant**
 
@@ -29,27 +30,134 @@ ARIA is a desktop‐based AI assistant powered by LangChain and Ollama. It can f
 1. **OS**: Windows 11  
 2. **Python** ≥ 3.8  
 3. **Ollama CLI** installed and running locally  
-   - I’m using **llama3.1** for chat (fits my PC specs)  
-   - You can pick any other Ollama model you prefer  
-4. **Embedded‑model**  
-   - I used `mxbai-embed-large`  
-   - You’re free to swap in another embedding model  
+   - Using **llama3.1** (fits my PC specs) — feel free to pick another model  
+4. **Embedding model**  
+   - Using `mxbai-embed-large` — you can swap in another embedding model  
 
 ---
 
-## ⚙️ Installation
+## ⚙️ Configuration & Usage
 
-```bash
-# 1. Clone this repo
-git clone https://github.com/pranavv444/ai-local-agent.git aria
-cd aria
+1. **Clone the repo**  
+   ```bash
+   git clone https://github.com/pranavv444/ai-local-agent.git aria
+   cd aria
+````
 
-# 2. (Optional) Create and activate a virtual environment
-python -m venv venv
-venv\Scripts\activate
+2. **(Optional) Create a virtual environment**
 
-# 3. Install dependencies
-pip install -r requirements.txt
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate
+   ```
 
-# 4. Prepare the vector database (first run)
-python vector.py
+3. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Prepare vector database**  (only on first run)
+
+   ```bash
+   python vector.py
+   ```
+
+5. **Telemetry settings** are in `config.py` (disabled by default):
+
+   ```python
+   import os
+   os.environ["CHROMA_TELEMETRY"]      = "false"
+   os.environ["ANONYMIZED_TELEMETRY"] = "false"
+   ```
+
+6. **Model configuration**
+
+   * Chat LLM (`main.py`):
+
+     ```python
+     model = OllamaLLM(model="llama3.1")
+     ```
+   * Embeddings (`vector.py`):
+
+     ```python
+     embeddings = OllamaEmbeddings(model="mxbai-embed-large")
+     ```
+
+7. **Run ARIA**
+
+   ```bash
+   # Text mode
+   python main.py
+   # Choose “1” and type your request
+
+   # Voice mode
+   python main.py
+   # Choose “2” and speak into your microphone
+
+   # Exit
+   # Choose “3” or type “exit”
+   ```
+
+**Example requests:**
+
+* Find pizza spots:
+
+  ```
+  What highly rated pizza spots are near me?
+  ```
+* Send Telegram message:
+
+  ```
+  Send "Hey, are we still on for tonight?" to Alice
+  ```
+* Control volume:
+
+  ```
+  Turn volume up
+  ```
+* Search YouTube:
+
+  ```
+  Search YouTube for "lofi hip hop"
+  ```
+
+---
+
+## 📂 File Structure
+
+```
+├── app_control.py      # Windows app & system automation
+├── config.py           # Telemetry settings
+├── main.py             # Entry point & LLM orchestration
+├── realistic_restaurant_reviews.csv
+├── requirements.txt
+├── vector.py           # Build/query local review embeddings
+├── chrome_langchain_db # Persisted ChromaDB folder
+└── .gitignore
+```
+
+---
+
+## 🤝 Contributing
+
+Found a bug or have an idea?
+
+1. Fork the repo
+2. Create a branch (`git checkout -b feature/XYZ`)
+3. Commit your changes (`git commit -m "Add XYZ"`)
+4. Push (`git push origin feature/XYZ`)
+5. Open a Pull Request
+
+---
+
+## 📬 Contact
+
+Questions or feedback? Open an issue or email **[pranavv444@gmail.com](mailto:pranavv444@gmail.com)**
+
+---
+
+*Built with ❤️ using Python, LangChain & Ollama.*
+
+```
+```
