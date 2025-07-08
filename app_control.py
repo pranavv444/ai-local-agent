@@ -8,7 +8,7 @@ import webbrowser
 from urllib.parse import quote
 import ctypes
 from ctypes import wintypes
-# Disable pyautogui failsafe for testing
+
 pyautogui.FAILSAFE = False
 
 
@@ -31,7 +31,6 @@ def find_telegram_click_position():
     print(f"\nTelegram appears at position: x={x}, y={y}")
     print(f"Update the code to use: click_x = {x}, click_y = {y}")
     
-    # Click it to test
     pyautogui.click(x, y)
 
 
@@ -84,11 +83,13 @@ def open_app(app_name):
                 x_pos = int(screen_width * x_percent)
                 print(f"[DEBUG] Checking taskbar position ({x_pos}, {taskbar_y})...")
                 
-                # Click the position
+                
+
+
                 pyautogui.click(x_pos, taskbar_y)
                 time.sleep(2)  # Wait for window to appear
                 
-                # Check if Telegram window appeared
+                
                 for window in gw.getAllWindows():
                     if "telegram" in window.title.lower():
                         print(f"[SUCCESS] Found Telegram at taskbar position {x_pos}")
@@ -110,16 +111,13 @@ def open_app(app_name):
                 pyautogui.press('win')
                 time.sleep(3)
                 
-                # Type telegram
                 print("[DEBUG] Typing 'Apps:telegram'...")
                 pyautogui.typewrite('Apps:telegram', interval=0.1)
                 time.sleep(10)  # Wait for search results
                 
-                # JUST CLICK ON THE FIRST APP RESULT
-                # In Windows 11, app results appear on the left side
+                
                 screen_width, screen_height = pyautogui.size()
                 
-                # Click where the first app result appears in Windows 11
                 click_x = 546  # Fixed position - left side where apps show
                 click_y = 348  # First result position
                 
@@ -178,7 +176,6 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
     print(f"[AGENT] Message length: {len(message)} characters")
     print(f"{'='*50}\n")
 
-    # Step 1: Ensure Telegram is open (using Start Menu method)
     print("[STEP 1] Opening Telegram via Start Menu...")
     app_opened = open_app("telegram")
 
@@ -186,12 +183,11 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
         print("\n[ERROR] Cannot open Telegram")
         return False
 
-    # Step 2: Find Telegram window with MORE ATTEMPTS
     print("\n[STEP 2] Looking for Telegram window...")
     telegram_win = None
     attempts = 0
 
-    while attempts < 10:  # INCREASED attempts
+    while attempts < 14:  
         all_windows = gw.getAllWindows()
 
         for window in all_windows:
@@ -205,13 +201,12 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
 
         attempts += 1
         print(f"[DEBUG] Attempt {attempts}/10 - Waiting for Telegram...")
-        time.sleep(5)  # INCREASED wait time
+        time.sleep(5)  
 
     if not telegram_win:
         print("\n[ERROR] Telegram window not found")
         return False
 
-    # Step 3: Focus the window with extra time
     print("\n[STEP 3] Focusing Telegram window...")
     try:
         if telegram_win.isMinimized:
@@ -220,7 +215,6 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
         telegram_win.activate()
         time.sleep(5)  # INCREASED
 
-        # Click in the middle of the window to ensure focus
         window_x = telegram_win.left + (telegram_win.width // 2)
         window_y = telegram_win.top + (telegram_win.height // 2)
         pyautogui.click(window_x, window_y)
@@ -230,7 +224,6 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
     except Exception as e:
         print(f"[WARN] Focus error: {e}")
 
-    # Step 4: Search for contact with more delays
     print(f"\n[STEP 4] Searching for contact: '{contact}'")
     try:
         # Clear any existing dialogs
@@ -256,7 +249,7 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
         pyautogui.typewrite(contact, interval=0.2)  # Type only contact
         time.sleep(5)  # Wait for search results
 
-        # Select the contact
+        
         pyautogui.press('enter')
         time.sleep(5)  # INCREASED wait after selecting
 
@@ -265,19 +258,23 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
         print(f"[ERROR] Contact search failed: {e}")
         return False
 
-    # Step 5: Send the message with better handling
+    
+
+
+
     print(f"\n[STEP 5] Sending message: '{message}'")
     try:
-        # Click in message area - try multiple positions
+
+
         msg_x = telegram_win.left + (telegram_win.width // 2)
         msg_y = telegram_win.top + telegram_win.height - 100
 
-        # Try clicking multiple times to ensure focus
+
+
         for i in range(3):
             pyautogui.click(msg_x, msg_y)
             time.sleep(1)
 
-        # Clear any existing text
         pyautogui.hotkey('ctrl', 'a')
         time.sleep(0.5)
         pyautogui.press('delete')
@@ -302,7 +299,8 @@ def send_telegram_message(contact: str, message: str, max_wait=40):
 
         time.sleep(2)  # Wait before sending
 
-        # Send the message
+        
+
         print("[DEBUG] Pressing Enter to send...")
         pyautogui.press('enter')
         time.sleep(2)
@@ -337,12 +335,10 @@ def debug_telegram_search():
     pyautogui.typewrite('telegram', interval=0.2)
     time.sleep(5)
 
-    # Take screenshot to see what's happening
     screenshot = pyautogui.screenshot()
     screenshot.save('telegram_search_debug.png')
     print("Screenshot saved as 'telegram_search_debug.png'")
 
-    # Try clicking
     screen_width, screen_height = pyautogui.size()
     search_result_x = int(screen_width * 0.15)
     search_result_y = int(screen_height * 0.25)
@@ -366,13 +362,12 @@ def system_control(command: str, value: str = None):
                 return True
                 
         elif command == "brightness":
-            # Note: Brightness control is tricky on desktop, easier on laptops
+            
             if value == "up":
                 print("[INFO] Increasing brightness...")
                 # Windows 10/11 shortcut
                 pyautogui.hotkey('win', 'a')  # Open action center
                 time.sleep(2)
-                # Click on brightness slider area (adjust coordinates as needed)
                 pyautogui.click(1800, 950)  # Adjust for your screen
                 pyautogui.press('escape')
                 return True
@@ -380,7 +375,7 @@ def system_control(command: str, value: str = None):
                 print("[INFO] Decreasing brightness...")
                 pyautogui.hotkey('win', 'a')
                 time.sleep(2)
-                pyautogui.click(1700, 950)  # Adjust for your screen
+                pyautogui.click(1700, 950)  
                 pyautogui.press('escape')
                 return True
                 
@@ -444,7 +439,6 @@ def browser_control(action: str, query: str = None):
         elif action == "website":
             if query:
                 print(f"[INFO] Opening website: {query}")
-                # Add https:// if not present
                 if not query.startswith(('http://', 'https://')):
                     query = 'https://' + query
                 webbrowser.open(query)

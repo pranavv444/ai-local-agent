@@ -10,7 +10,6 @@ import pyautogui
 import webbrowser
 import subprocess
 
-# Updated Template
 template = """
 You are ARIA, an AI assistant that can answer questions and control desktop applications.
 
@@ -138,21 +137,20 @@ def get_voice_command():
         try:
             # Listen for audio
             audio = recognizer.listen(source, timeout=5)
-            print("🔄 Processing speech...")
+            print("Processing speech...")
             
-            # Convert speech to text
             text = recognizer.recognize_google(audio)
-            print(f"✅ You said: {text}")
+            print(f" You said: {text}")
             return text
             
         except sr.WaitTimeoutError:
-            print("❌ No speech detected")
+            print(" No speech detected")
             return None
         except sr.UnknownValueError:
-            print("❌ Could not understand audio")
+            print("Could not understand audio")
             return None
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
             return None
 
 
@@ -161,31 +159,31 @@ def get_voice_command():
         if command == "volume":
             if value == "up":
                 pyautogui.press('volumeup')
-                print("✅ Volume increased")
+                print("Volume increased")
             elif value == "down":
                 pyautogui.press('volumedown')
-                print("✅ Volume decreased")
+                print("Volume decreased")
             elif value == "mute":
                 pyautogui.press('volumemute')
-                print("✅ Volume muted/unmuted")
+                print("Volume muted/unmuted")
         
         elif command == "lock":
             pyautogui.hotkey('win', 'l')
-            print("✅ Screen locked")
+            print("Screen locked")
         
         elif command == "shutdown":
             seconds = int(value) if value else 60
             subprocess.run(f"shutdown /s /t {seconds}", shell=True)
-            print(f"✅ System will shutdown in {seconds} seconds")
+            print(f"System will shutdown in {seconds} seconds")
         
         elif command == "restart":
             seconds = int(value) if value else 60
             subprocess.run(f"shutdown /r /t {seconds}", shell=True)
-            print(f"✅ System will restart in {seconds} seconds")
+            print(f"System will restart in {seconds} seconds")
         
         elif command == "cancel_shutdown":
             subprocess.run("shutdown /a", shell=True)
-            print("✅ Shutdown cancelled")
+            print("Shutdown cancelled")
         
         else:
             print(f"[ERROR] Unknown system command: {command}")
@@ -199,7 +197,7 @@ def browser_control(action: str, query: str):
         if action == "google":
             search_url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
             webbrowser.open(search_url)
-            print(f"✅ Opened Google search for: {query}")
+            print(f"Opened Google search for: {query}")
         
         elif action == "youtube":
             youtube_url = f"https://www.youtube.com/results?search_query={query.replace(' ', '+')}"
@@ -221,17 +219,17 @@ def browser_control(action: str, query: str):
 
 def process_llm_response(llm_output: str):
     out_str = llm_output.strip()
-    print(f"\n[DEBUG] LLM Output: {out_str}\n")  # Debug print
+    print(f"\n[DEBUG] LLM Output: {out_str}\n")  # Debug for print
     
-    # Check if it's an ACTION command
     if out_str.upper().startswith("ACTION:"):
-        # Extract the action part after "ACTION:"
-        action_part = out_str[7:].strip()  # Skip "ACTION:" (7 chars)
+        action_part = out_str[7:].strip() 
         
         # Check if it's a telegram command
         if action_part.lower().startswith("telegram send"):
             # Extract everything after "telegram send"
-            telegram_part = action_part[13:].strip()  # Skip "telegram send" (13 chars)
+            telegram_part = action_part[13:].strip()  
+
+
             
             # Try different patterns to parse contact and message
             telegram_patterns = [
@@ -255,7 +253,6 @@ def process_llm_response(llm_output: str):
                     print(f"       Contact: '{contact}'")
                     print(f"       Message: '{message}'")
                     
-                    # Send the message
                     success = send_telegram_message(contact, message)
                     if not success:
                         print("[ERROR] Failed to send Telegram message")
@@ -265,7 +262,6 @@ def process_llm_response(llm_output: str):
             if not matched:
                 print(f"[ERROR] Could not parse telegram command: {telegram_part}")
         
-        # Check if it's a system command
         elif action_part.lower().startswith("system"):
             parts = action_part.split(maxsplit=2)
             if len(parts) >= 2:
@@ -280,12 +276,12 @@ def process_llm_response(llm_output: str):
             parts = action_part.split(maxsplit=2)
             if len(parts) >= 3:
                 action = parts[1].lower()
-                query = parts[2].strip('"')  # Remove quotes if present
+                query = parts[2].strip('"')  
                 browser_control(action, query)
             else:
                 print("[ERROR] Invalid browser command")
         
-        # Check if it's another app command (spotify, notepad, paint)
+    
         else:
             parts = action_part.split(maxsplit=1)
             if len(parts) >= 2:
@@ -294,7 +290,7 @@ def process_llm_response(llm_output: str):
                 
                 if app_name == "spotify" and operation == "play":
                     open_app(app_name)
-                    time.sleep(10)  # Extra time for slow PC
+                    time.sleep(10)  
                     play_pause_spotify()
                 elif operation == "open" and app_name in ["notepad", "paint"]:
                     open_app(app_name)
@@ -343,8 +339,8 @@ if __name__ == "__main__":
             print("Invalid choice. Please select 1, 2, or 3.")
             continue
         
-        # Process the command (voice or text)
-        print("\n🤖 Processing...")
+        
+        print("\nProcessing...")
         reviews = retriever.invoke(question)
         result = chain.invoke({"reviews": reviews, "question": question})
         process_llm_response(str(result))
