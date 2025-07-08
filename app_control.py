@@ -4,7 +4,10 @@ import platform
 import time
 import pyautogui
 import pygetwindow as gw
-
+import webbrowser
+from urllib.parse import quote
+import ctypes
+from ctypes import wintypes
 # Disable pyautogui failsafe for testing
 pyautogui.FAILSAFE = False
 
@@ -13,11 +16,11 @@ def find_telegram_click_position():
     """Run this to find where to click for Telegram"""
     print("Opening Start menu...")
     pyautogui.press('win')
-    time.sleep(3)
+    time.sleep(6)
     
     print("Typing Apps:telegram...")
     pyautogui.typewrite('Apps:telegram')
-    time.sleep(3)
+    time.sleep(6)
     
     print("\nNOW LOOK AT YOUR SCREEN!")
     print("Move your mouse to where Telegram appears in the search results")
@@ -110,7 +113,7 @@ def open_app(app_name):
                 # Type telegram
                 print("[DEBUG] Typing 'Apps:telegram'...")
                 pyautogui.typewrite('Apps:telegram', interval=0.1)
-                time.sleep(8)  # Wait for search results
+                time.sleep(10)  # Wait for search results
                 
                 # JUST CLICK ON THE FIRST APP RESULT
                 # In Windows 11, app results appear on the left side
@@ -125,7 +128,7 @@ def open_app(app_name):
                 
                 # Give it time to open
                 print("[INFO] Waiting 15 seconds for Telegram to open...")
-                time.sleep(15)
+                time.sleep(20)
                 
                 return True
                         
@@ -345,3 +348,111 @@ def debug_telegram_search():
     search_result_y = int(screen_height * 0.25)
     print(f"Clicking at ({search_result_x}, {search_result_y})...")
     pyautogui.click(x=search_result_x, y=search_result_y)
+def system_control(command: str, value: str = None):
+    """Control system functions like volume, brightness, shutdown"""
+    try:
+        if command == "volume":
+            if value == "up":
+                print("[INFO] Increasing volume...")
+                pyautogui.press('volumeup')
+                return True
+            elif value == "down":
+                print("[INFO] Decreasing volume...")
+                pyautogui.press('volumedown')
+                return True
+            elif value == "mute":
+                print("[INFO] Toggling mute...")
+                pyautogui.press('volumemute')
+                return True
+                
+        elif command == "brightness":
+            # Note: Brightness control is tricky on desktop, easier on laptops
+            if value == "up":
+                print("[INFO] Increasing brightness...")
+                # Windows 10/11 shortcut
+                pyautogui.hotkey('win', 'a')  # Open action center
+                time.sleep(2)
+                # Click on brightness slider area (adjust coordinates as needed)
+                pyautogui.click(1800, 950)  # Adjust for your screen
+                pyautogui.press('escape')
+                return True
+            elif value == "down":
+                print("[INFO] Decreasing brightness...")
+                pyautogui.hotkey('win', 'a')
+                time.sleep(2)
+                pyautogui.click(1700, 950)  # Adjust for your screen
+                pyautogui.press('escape')
+                return True
+                
+        elif command == "lock":
+            print("[INFO] Locking screen...")
+            pyautogui.hotkey('win', 'l')
+            return True
+            
+        elif command == "shutdown":
+            if value:
+                print(f"[INFO] Scheduling shutdown in {value} seconds...")
+                os.system(f"shutdown /s /t {value}")
+            else:
+                print("[INFO] Shutting down immediately...")
+                os.system("shutdown /s /t 0")
+            return True
+            
+        elif command == "restart":
+            if value:
+                print(f"[INFO] Scheduling restart in {value} seconds...")
+                os.system(f"shutdown /r /t {value}")
+            else:
+                print("[INFO] Restarting immediately...")
+                os.system("shutdown /r /t 0")
+            return True
+            
+        elif command == "cancel_shutdown":
+            print("[INFO] Cancelling shutdown/restart...")
+            os.system("shutdown /a")
+            return True
+            
+    except Exception as e:
+        print(f"[ERROR] System control failed: {e}")
+        return False
+def browser_control(action: str, query: str = None):
+    """Control browser - search, open websites, play youtube"""
+    try:
+        if action == "google":
+            if query:
+                print(f"[INFO] Searching Google for: {query}")
+                search_url = f"https://www.google.com/search?q={quote(query)}"
+                webbrowser.open(search_url)
+                return True
+            else:
+                print("[ERROR] No search query provided")
+                return False
+                
+        elif action == "youtube":
+            if query:
+                print(f"[INFO] Searching YouTube for: {query}")
+                youtube_url = f"https://www.youtube.com/results?search_query={quote(query)}"
+                webbrowser.open(youtube_url)
+                # Wait and click first video
+                time.sleep(5)
+                pyautogui.click(700, 350)  # Adjust coordinates for first video
+                return True
+            else:
+                print("[ERROR] No video query provided")
+                return False
+                
+        elif action == "website":
+            if query:
+                print(f"[INFO] Opening website: {query}")
+                # Add https:// if not present
+                if not query.startswith(('http://', 'https://')):
+                    query = 'https://' + query
+                webbrowser.open(query)
+                return True
+            else:
+                print("[ERROR] No website provided")
+                return False
+                
+    except Exception as e:
+        print(f"[ERROR] Browser control failed: {e}")
+        return False
